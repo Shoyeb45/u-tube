@@ -1,2 +1,8 @@
 # Environment variable file
 .env
+
+# folders
+node_modules
+
+# package things
+package-lock.json
