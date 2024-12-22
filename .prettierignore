@@ -1,0 +1,8 @@
+# This will 
+/node_modules
+/.vscode
+./dist
+
+*.env
+.env
+.env.*
