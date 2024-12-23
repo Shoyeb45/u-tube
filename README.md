@@ -12,8 +12,14 @@
     3. middlewares
     4. models
     5. routes
-    6. utils
+    6. utils : It will have utility modules to help us doing task more efficiently and more cleanly. Like making function for executing function asynchronously
 
 ## Used technologies and library
 
-1. nodemon : for restarting the server after a save.
+1. `nodemon` &nbsp;&nbsp;&nbsp;:&nbsp;For restarting the server after a save.
+2. `dotenv`  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: For system environment variables
+3. `prettier`&nbsp;&nbsp;: For formatting of code
+4. `express` : 
+5. `mongoose`:
+6. `cookie-parser`:
+7. `cors`:

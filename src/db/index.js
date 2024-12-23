@@ -5,7 +5,7 @@ const connectDB = async () => {
     try {
 
         let uri = `${process.env.MONGODB_URI}/${DB_NAME}`;
-        console.log("uri", uri);
+        // console.log("uri", uri);  it was for debug
         
         const connectionInstance = await mongoose.connect(uri);
         console.log(`----------- MongoDB connected successfully -----------\nDatabase host: ${connectionInstance.connection.host}\n------------------------ Happy -----------------------`);
