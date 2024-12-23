@@ -23,3 +23,17 @@
 5. `mongoose`:
 6. `cookie-parser`:
 7. `cors`:
+8. `mongoose-aggregate-paginate-v2`:
+9. `bcrypt.js` : 
+10. `jsonwebtoken` : 
+
+### Generating secret keys for jwt:
+
+To generate a random JWT secret key, you can use a tool like Node.js to create a random string. Here's a simple example:
+
+1. Open your terminal or command prompt.
+2. Run the following Node.js script to generate a random string:
+```js
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+This command uses the crypto module in Node.js to generate a random sequence of 32 bytes and then converts it to a hexadecimal string.

@@ -63,10 +63,44 @@ userSchema.pre("save", async function(next) {
 
 
 // function for checking the password, we can define method for our schema
+// schema.methods.anyName, if anyName does not exist it will create a method for our schema.
 userSchema.methods.isPasswordCorrect = async function(password) {
     return await bcryptjs.compare(password, this.password);
 }
 
+// Function for generating access token
+userSchema.methods.generateAccessToken = function() {
+    // We'll use sign method which takes three arguments
+    return jwt.sign(
+        {
+            _id: this._id, // id from database  
+            email: this.email,
+            username: this.username,
+            fullname: this.fullname
+        },
+        // Secret code which it will use to generate
+        process.env.ACCESS_TOKEN_SECRET,
+        // Give expiry in object form
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    );
+};
 
+// Function for generating refresh token
+userSchema.methods.generateRefreshToken = function() {
+    return jwt.sign(
+        {
+            _id: this._id, // id from database  
+        },
+        // Secret code which it will use to generate
+        process.env.REFRESH_TOKEN_SECRET,
+        // Give expiry in object form
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+        }
+    );
+
+};
 export const User = mongoose.model("User", userSchema);
 
