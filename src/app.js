@@ -27,6 +27,13 @@ app.use(express.static("public"));
 // To perform the CRUD operations on user cookies
 app.use(cookieParser());
 
+
+// routes import
+import userRouter from "./routes/user.routes.js";
+
+// Routes declaration
+app.use("/api/v1/user", userRouter); // using api and v1 is good practice 
+
 app.get("/", (req, res) => {
     res.send("I'm here!!!!<br>Yayyyy!!!");
 });

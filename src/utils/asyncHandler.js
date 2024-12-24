@@ -4,11 +4,12 @@
 // Way-1
 /**
  * Wrapper function to execute another function
- * @param {*} requestHandler: Function to execute asynchrounously 
+ * @param {*} requestHandler: Function to execute asynchrounously
+ * @returns function after executing 
  */
 const asyncHandler = (requestHandler) => {
     // Another function
-    async (req, res, next) => {
+    return async (req, res, next) => {
         try {
             await requestHandler(req, res, next);
         } catch (error) {
