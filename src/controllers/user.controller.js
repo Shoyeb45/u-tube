@@ -103,7 +103,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // Check if the user is really selected
     const isUserCreated = await User.findById(user._id).select(
-        "-password -refreshTokem" // give the column name which we need to exclude by -Column1 -column2 ....
+        "-password -refreshToken" // give the column name which we need to exclude by -Column1 -column2 ....
     );
 
     // If something went wrong, it's our mistake so, error code should be from server side 
