@@ -8,6 +8,11 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 });
 
+/**
+ * 
+ * @param {*} localFilePath      Local path of the file which needs to be uploaded  
+ * @returns                      A resoponse object
+ */
 const uploadOnCloudinary = async function(localFilePath) {
     try {
         if (!localFilePath) {
@@ -19,10 +24,10 @@ const uploadOnCloudinary = async function(localFilePath) {
         });
 
         // Now file has been uploaded.
-        console.log("Congratulations, file has been uploaded successfully...\nURL of file:", response.url);
+        // console.log("Congratulations, file has been uploaded successfully...\nURL of file:", response.url);
         
         // Now delete the file (or unlink)
-        fs.unlink(localFilePath);
+        // fs.unlink(localFilePath);
         return response;
     } catch (error) {
         fs.unlinkSync(localFilePath) // remove the locally saved temporary file as the upload operation got failed
