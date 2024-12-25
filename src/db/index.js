@@ -8,7 +8,7 @@ const connectDB = async () => {
         // console.log("uri", uri);  it was for debug
         
         const connectionInstance = await mongoose.connect(uri);
-        console.log(`----------- MongoDB connected successfully -----------\nDatabase host: ${connectionInstance.connection.host}\n------------------------ Happy -----------------------`);
+        // console.log(`----------- MongoDB connected successfully -----------\nDatabase host: ${connectionInstance.connection.host}\n------------------------ Happy -----------------------`);
         
     } catch (error) {
         console.log("MongoDB Connection failed");
