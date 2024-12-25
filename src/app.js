@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 
 // routes import
-import userRouter from "./routes/user.routes.js";
+import userRouter from "./routes/user.route.js";
 
 // Routes declaration
 app.use("/api/v1/user", userRouter); // using api and v1 is good practice 
