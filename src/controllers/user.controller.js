@@ -60,7 +60,8 @@ const registerUser = asyncHandler( async (req, res) => {
         console.log("cloud upload");
         throw new ApiError(400, "Avatar file is reqired");
     }
-
+    console.log("avatar response" + "\n",avatar);
+    
     // Upload data in schema
     const user = await User.create({
         fullname,
@@ -82,7 +83,7 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 
     // Send response using our ApiResponse class
-    return res.status(201).json(new ApiResponse(200, createdUser, "User registered succefully"));  
+    return res.status(201).json(new ApiResponse(200, isUserCreated, "User registered succefully"));  
 });
 
 
