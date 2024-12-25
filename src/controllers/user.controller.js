@@ -44,29 +44,31 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // 4. Cover Image and banner
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const bannerImageLocalPath = req.files?.banner[0]?.path;
+    let coverImageLocalPath = "";
+
+    if (req.files && Array.isArray(req.files) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
     
+
     
     if (!avatarLocalPath) {
-        console.log("Local upload");
         throw new ApiError(400, "Avatar file is reqired");  // Throw the error if does not exist
     }
     
     const avatar = await uploadOnCloudinary(avatarLocalPath);               // Upload the file in cloudinary
-    const bannerImage = await uploadOnCloudinary(bannerImageLocalPath);
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath);
     
     // Check if avatar is uploaded or not
     if (!avatar) {
-        console.log("cloud upload");
         throw new ApiError(400, "Avatar file is reqired");
     }
-    console.log("avatar response" + "\n",avatar);
     
     // Upload data in schema
     const user = await User.create({
         fullname,
         avatar: avatar.url,
-        coverImage: bannerImage?.url ||  "",  // check if the user have given banner url 
+        coverImage: coverImage?.url ||  "",  // check if the user have given banner url 
         email,
         password,
         username: username.toLowerCase()
