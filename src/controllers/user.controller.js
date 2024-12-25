@@ -4,6 +4,34 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinaryUpload.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+
+
+/**
+ * 
+ * @author Shoyeb Ansari
+ * @param {*} user : databse object of userSchema
+ * @returns Access token and Refresh Token
+ */
+const generateRefreshAndAccessToken = async (user) => {
+    try {
+        // Generate tokens
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+        
+        // Update refresh tokens
+        user.refreshToken = refreshToken;
+        await user.save({
+            validateBeforeSave: false
+        });
+
+        return { accessToken, refreshToken };
+    } catch (error) {
+        throw new ApiError(500, "Something went wronog while generating access and refresh token");
+    }
+};
+
+
+
 /**
  * Function for registering user
  * 
@@ -46,7 +74,7 @@ const registerUser = asyncHandler( async (req, res) => {
     const avatarLocalPath = req.files?.avatar[0]?.path;
     let coverImageLocalPath = "";
 
-    if (req.files && Array.isArray(req.files) && req.files.coverImage.length > 0) {
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
         coverImageLocalPath = req.files.coverImage[0].path;
     }
     
@@ -89,4 +117,96 @@ const registerUser = asyncHandler( async (req, res) => {
 });
 
 
-export  { registerUser } ; 
+/**
+ * Function for making user login
+ * 
+ * @author Shoyeb Ansari
+ * Problem breakdown:
+ * 1. Get the data from user, i.e., username and password
+ * 2. Check if the username exist, if not then give that error
+ * 3. If exist then get the _id of the user, and then get the encrypted password
+ * 4. Convert the given password to encrypted password
+ * 5. Compare the both password 
+ * 6. Access and refresh token
+ * 7. Send cookie
+ */
+const loginUser = asyncHandler ( async (req, res) => {
+    // 1. get the data
+    const { username, password } = req.body;
+
+    if (!username) {
+        throw new ApiError(400, "Username is required.");
+    }
+    // 2. check the user
+    const user = await user.findOne({username});
+
+    if (!user) {
+        throw ApiError(404, "User does not exist");
+    }
+
+    const isPasswordCorrect = await user.isPasswordCorrect(password);
+    if (!isPasswordCorrect) {
+        throw new ApiError(401, "Password is incorrect");
+    }
+
+    // Update tokens
+    const {refreshToken, accessToken} = await generateRefreshAndAccessToken(user);
+    const loggedInUser = User.findById(user._id).select("-password -refreshToken");
+
+    const options = {
+        httpOnly: true,
+        secure: true      
+    };
+    
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken)
+    .cookie("refreshToken", refreshToken)
+    .json(
+            new ApiResponse(
+                200,
+                {
+                    user: loggedInUser, accessToken, refreshToken
+                },
+                "User logged in successfully"
+            )
+        );
+});
+
+
+/**
+ * Function to log out the user.
+ * 
+*/
+const logoutUser = asyncHandler (async (req, res) => {
+    await User.findByIdAndUpdate(  // this method will find and update the databse
+        req.user._id,
+        {
+            $set: { // set is operator which allows us to set the field
+                refreshToken: undefined
+            }
+        },
+        {
+            new: true   // return value will be update 
+        }
+    );
+    
+    const options = {
+        httpOnly: true,
+        secure: true      
+    };
+    
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options);
+});
+
+
+// export functions
+export { 
+    registerUser, 
+    loginUser,
+    logoutUser
+}; 
