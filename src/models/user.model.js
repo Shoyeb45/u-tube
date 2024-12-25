@@ -56,7 +56,7 @@ userSchema.pre("save", async function(next) {
         return next();
     }
 
-    // hash method will take password and encrypt it into some algorithm.
+    // hash method will take password and encrypt it by using some algorithm.
     this.password = await bcryptjs.hash(this.password, 10);
     next();
 });
